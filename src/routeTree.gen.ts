@@ -10,33 +10,260 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AlertsRouteImport } from './routes/alerts'
+import { Route as LiveRouteImport } from './routes/live'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as PredictionsRouteImport } from './routes/predictions'
+import { Route as ReportsRouteImport } from './routes/reports'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as TransactionsRouteImport } from './routes/transactions'
+import { Route as DistrictsIndexRouteImport } from './routes/districts.index'
+import { Route as DistrictsDistrictIdRouteImport } from './routes/districts.$districtId'
+import { Route as GodownsIndexRouteImport } from './routes/godowns.index'
+import { Route as GodownsGodownIdRouteImport } from './routes/godowns.$godownId'
+import { Route as ShopsIndexRouteImport } from './routes/shops.index'
+import { Route as ShopsShopIdRouteImport } from './routes/shops.$shopId'
+import { Route as ApiPublicIngestSourcesRouteImport } from './routes/api/public/ingest/sources'
+import { Route as ApiPublicIngestStockRouteImport } from './routes/api/public/ingest/stock'
+import { Route as ApiPublicIngestTransactionRouteImport } from './routes/api/public/ingest/transaction'
+import { Route as ApiPublicTransactionsLiveRouteImport } from './routes/api/public/transactions/live'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AlertsRoute = AlertsRouteImport.update({
+  id: '/alerts',
+  path: '/alerts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LiveRoute = LiveRouteImport.update({
+  id: '/live',
+  path: '/live',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PredictionsRoute = PredictionsRouteImport.update({
+  id: '/predictions',
+  path: '/predictions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportsRoute = ReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TransactionsRoute = TransactionsRouteImport.update({
+  id: '/transactions',
+  path: '/transactions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DistrictsIndexRoute = DistrictsIndexRouteImport.update({
+  id: '/districts/',
+  path: '/districts/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DistrictsDistrictIdRoute = DistrictsDistrictIdRouteImport.update({
+  id: '/districts/$districtId',
+  path: '/districts/$districtId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GodownsIndexRoute = GodownsIndexRouteImport.update({
+  id: '/godowns/',
+  path: '/godowns/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GodownsGodownIdRoute = GodownsGodownIdRouteImport.update({
+  id: '/godowns/$godownId',
+  path: '/godowns/$godownId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShopsIndexRoute = ShopsIndexRouteImport.update({
+  id: '/shops/',
+  path: '/shops/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShopsShopIdRoute = ShopsShopIdRouteImport.update({
+  id: '/shops/$shopId',
+  path: '/shops/$shopId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicIngestSourcesRoute = ApiPublicIngestSourcesRouteImport.update({
+  id: '/api/public/ingest/sources',
+  path: '/api/public/ingest/sources',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicIngestStockRoute = ApiPublicIngestStockRouteImport.update({
+  id: '/api/public/ingest/stock',
+  path: '/api/public/ingest/stock',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicIngestTransactionRoute =
+  ApiPublicIngestTransactionRouteImport.update({
+    id: '/api/public/ingest/transaction',
+    path: '/api/public/ingest/transaction',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicTransactionsLiveRoute =
+  ApiPublicTransactionsLiveRouteImport.update({
+    id: '/api/public/transactions/live',
+    path: '/api/public/transactions/live',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/alerts': typeof AlertsRoute
+  '/live': typeof LiveRoute
+  '/login': typeof LoginRoute
+  '/predictions': typeof PredictionsRoute
+  '/reports': typeof ReportsRoute
+  '/settings': typeof SettingsRoute
+  '/transactions': typeof TransactionsRoute
+  '/districts/$districtId': typeof DistrictsDistrictIdRoute
+  '/godowns/$godownId': typeof GodownsGodownIdRoute
+  '/shops/$shopId': typeof ShopsShopIdRoute
+  '/districts/': typeof DistrictsIndexRoute
+  '/godowns/': typeof GodownsIndexRoute
+  '/shops/': typeof ShopsIndexRoute
+  '/api/public/ingest/sources': typeof ApiPublicIngestSourcesRoute
+  '/api/public/ingest/stock': typeof ApiPublicIngestStockRoute
+  '/api/public/ingest/transaction': typeof ApiPublicIngestTransactionRoute
+  '/api/public/transactions/live': typeof ApiPublicTransactionsLiveRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/alerts': typeof AlertsRoute
+  '/live': typeof LiveRoute
+  '/login': typeof LoginRoute
+  '/predictions': typeof PredictionsRoute
+  '/reports': typeof ReportsRoute
+  '/settings': typeof SettingsRoute
+  '/transactions': typeof TransactionsRoute
+  '/districts/$districtId': typeof DistrictsDistrictIdRoute
+  '/godowns/$godownId': typeof GodownsGodownIdRoute
+  '/shops/$shopId': typeof ShopsShopIdRoute
+  '/districts': typeof DistrictsIndexRoute
+  '/godowns': typeof GodownsIndexRoute
+  '/shops': typeof ShopsIndexRoute
+  '/api/public/ingest/sources': typeof ApiPublicIngestSourcesRoute
+  '/api/public/ingest/stock': typeof ApiPublicIngestStockRoute
+  '/api/public/ingest/transaction': typeof ApiPublicIngestTransactionRoute
+  '/api/public/transactions/live': typeof ApiPublicTransactionsLiveRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/alerts': typeof AlertsRoute
+  '/live': typeof LiveRoute
+  '/login': typeof LoginRoute
+  '/predictions': typeof PredictionsRoute
+  '/reports': typeof ReportsRoute
+  '/settings': typeof SettingsRoute
+  '/transactions': typeof TransactionsRoute
+  '/districts/$districtId': typeof DistrictsDistrictIdRoute
+  '/godowns/$godownId': typeof GodownsGodownIdRoute
+  '/shops/$shopId': typeof ShopsShopIdRoute
+  '/districts/': typeof DistrictsIndexRoute
+  '/godowns/': typeof GodownsIndexRoute
+  '/shops/': typeof ShopsIndexRoute
+  '/api/public/ingest/sources': typeof ApiPublicIngestSourcesRoute
+  '/api/public/ingest/stock': typeof ApiPublicIngestStockRoute
+  '/api/public/ingest/transaction': typeof ApiPublicIngestTransactionRoute
+  '/api/public/transactions/live': typeof ApiPublicTransactionsLiveRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/alerts'
+    | '/live'
+    | '/login'
+    | '/predictions'
+    | '/reports'
+    | '/settings'
+    | '/transactions'
+    | '/districts/$districtId'
+    | '/godowns/$godownId'
+    | '/shops/$shopId'
+    | '/districts/'
+    | '/godowns/'
+    | '/shops/'
+    | '/api/public/ingest/sources'
+    | '/api/public/ingest/stock'
+    | '/api/public/ingest/transaction'
+    | '/api/public/transactions/live'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/alerts'
+    | '/live'
+    | '/login'
+    | '/predictions'
+    | '/reports'
+    | '/settings'
+    | '/transactions'
+    | '/districts/$districtId'
+    | '/godowns/$godownId'
+    | '/shops/$shopId'
+    | '/districts'
+    | '/godowns'
+    | '/shops'
+    | '/api/public/ingest/sources'
+    | '/api/public/ingest/stock'
+    | '/api/public/ingest/transaction'
+    | '/api/public/transactions/live'
+  id:
+    | '__root__'
+    | '/'
+    | '/alerts'
+    | '/live'
+    | '/login'
+    | '/predictions'
+    | '/reports'
+    | '/settings'
+    | '/transactions'
+    | '/districts/$districtId'
+    | '/godowns/$godownId'
+    | '/shops/$shopId'
+    | '/districts/'
+    | '/godowns/'
+    | '/shops/'
+    | '/api/public/ingest/sources'
+    | '/api/public/ingest/stock'
+    | '/api/public/ingest/transaction'
+    | '/api/public/transactions/live'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AlertsRoute: typeof AlertsRoute
+  LiveRoute: typeof LiveRoute
+  LoginRoute: typeof LoginRoute
+  PredictionsRoute: typeof PredictionsRoute
+  ReportsRoute: typeof ReportsRoute
+  SettingsRoute: typeof SettingsRoute
+  TransactionsRoute: typeof TransactionsRoute
+  DistrictsDistrictIdRoute: typeof DistrictsDistrictIdRoute
+  GodownsGodownIdRoute: typeof GodownsGodownIdRoute
+  ShopsShopIdRoute: typeof ShopsShopIdRoute
+  DistrictsIndexRoute: typeof DistrictsIndexRoute
+  GodownsIndexRoute: typeof GodownsIndexRoute
+  ShopsIndexRoute: typeof ShopsIndexRoute
+  ApiPublicIngestSourcesRoute: typeof ApiPublicIngestSourcesRoute
+  ApiPublicIngestStockRoute: typeof ApiPublicIngestStockRoute
+  ApiPublicIngestTransactionRoute: typeof ApiPublicIngestTransactionRoute
+  ApiPublicTransactionsLiveRoute: typeof ApiPublicTransactionsLiveRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +275,147 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/alerts': {
+      id: '/alerts'
+      path: '/alerts'
+      fullPath: '/alerts'
+      preLoaderRoute: typeof AlertsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/live': {
+      id: '/live'
+      path: '/live'
+      fullPath: '/live'
+      preLoaderRoute: typeof LiveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/predictions': {
+      id: '/predictions'
+      path: '/predictions'
+      fullPath: '/predictions'
+      preLoaderRoute: typeof PredictionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reports': {
+      id: '/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof ReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/transactions': {
+      id: '/transactions'
+      path: '/transactions'
+      fullPath: '/transactions'
+      preLoaderRoute: typeof TransactionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/districts/': {
+      id: '/districts/'
+      path: '/districts'
+      fullPath: '/districts/'
+      preLoaderRoute: typeof DistrictsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/districts/$districtId': {
+      id: '/districts/$districtId'
+      path: '/districts/$districtId'
+      fullPath: '/districts/$districtId'
+      preLoaderRoute: typeof DistrictsDistrictIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/godowns/': {
+      id: '/godowns/'
+      path: '/godowns'
+      fullPath: '/godowns/'
+      preLoaderRoute: typeof GodownsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/godowns/$godownId': {
+      id: '/godowns/$godownId'
+      path: '/godowns/$godownId'
+      fullPath: '/godowns/$godownId'
+      preLoaderRoute: typeof GodownsGodownIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shops/': {
+      id: '/shops/'
+      path: '/shops'
+      fullPath: '/shops/'
+      preLoaderRoute: typeof ShopsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shops/$shopId': {
+      id: '/shops/$shopId'
+      path: '/shops/$shopId'
+      fullPath: '/shops/$shopId'
+      preLoaderRoute: typeof ShopsShopIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/ingest/sources': {
+      id: '/api/public/ingest/sources'
+      path: '/api/public/ingest/sources'
+      fullPath: '/api/public/ingest/sources'
+      preLoaderRoute: typeof ApiPublicIngestSourcesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/ingest/stock': {
+      id: '/api/public/ingest/stock'
+      path: '/api/public/ingest/stock'
+      fullPath: '/api/public/ingest/stock'
+      preLoaderRoute: typeof ApiPublicIngestStockRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/ingest/transaction': {
+      id: '/api/public/ingest/transaction'
+      path: '/api/public/ingest/transaction'
+      fullPath: '/api/public/ingest/transaction'
+      preLoaderRoute: typeof ApiPublicIngestTransactionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/transactions/live': {
+      id: '/api/public/transactions/live'
+      path: '/api/public/transactions/live'
+      fullPath: '/api/public/transactions/live'
+      preLoaderRoute: typeof ApiPublicTransactionsLiveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AlertsRoute: AlertsRoute,
+  LiveRoute: LiveRoute,
+  LoginRoute: LoginRoute,
+  PredictionsRoute: PredictionsRoute,
+  ReportsRoute: ReportsRoute,
+  SettingsRoute: SettingsRoute,
+  TransactionsRoute: TransactionsRoute,
+  DistrictsDistrictIdRoute: DistrictsDistrictIdRoute,
+  GodownsGodownIdRoute: GodownsGodownIdRoute,
+  ShopsShopIdRoute: ShopsShopIdRoute,
+  DistrictsIndexRoute: DistrictsIndexRoute,
+  GodownsIndexRoute: GodownsIndexRoute,
+  ShopsIndexRoute: ShopsIndexRoute,
+  ApiPublicIngestSourcesRoute: ApiPublicIngestSourcesRoute,
+  ApiPublicIngestStockRoute: ApiPublicIngestStockRoute,
+  ApiPublicIngestTransactionRoute: ApiPublicIngestTransactionRoute,
+  ApiPublicTransactionsLiveRoute: ApiPublicTransactionsLiveRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,0 +1,34 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1794209998405,
+      "tag": "0000_smart_ration_schema_and_rules",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794210544051,
+      "tag": "0001_smart_ration_demo_data",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794210775223,
+      "tag": "0002_demo_role_requires_confirmed_email",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1794211905845,
+      "tag": "0003_demo_role_on_email_confirmation",
+      "breakpoints": true
+    }
+  ]
+}

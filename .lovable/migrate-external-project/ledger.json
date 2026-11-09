@@ -1,0 +1,22 @@
+{
+  "source": "code-archive: Smart_Ration_Tracker.zip (FastAPI + SQLite backend, Jinja pages, React/Vite frontend)",
+  "capabilities": [
+    {"capability": "code: pages (state overview, districts, district, godowns, godown, shops, shop, stock movements, reports, predictions, alerts, live feed, settings, sign-in)", "source": "frontend/src + backend/app/templates", "outcome": "migrate", "status": "verified", "next_action": "none — every page loaded without errors in a browser check"},
+    {"capability": "schema: 15 tables", "source": "backend/app/models/entities.py", "outcome": "migrate", "status": "verified", "next_action": "none"},
+    {"capability": "records: bundled demo CSVs (5 districts, 10 godowns, 50 shops, 2388 movements, 593 deliveries, 300 monthly rows, 5 measurements)", "source": "backend/data/*.csv (sanitized)", "outcome": "migrate", "status": "verified", "next_action": "none — counts and checksums match; test writes removed afterwards"},
+    {"capability": "records: live SQLite database smart_ration.db", "source": "not included in archive", "outcome": "migrate", "status": "pending", "next_action": "Ask user for per-table CSV exports if their running copy has changes beyond the bundled CSVs"},
+    {"capability": "auth identities: 6 demo role accounts (no real inboxes, shared published demo password)", "source": "backend/data/users.csv", "outcome": "migrate", "status": "verified", "next_action": "Accounts are created on first demo sign-in with a stronger shared password (original was rejected by the leaked-password check). Real staff need real email accounts; user to confirm whether any exist"},
+    {"capability": "authorization: 6 roles + location scoping (district/godown/shop)", "source": "backend/app/services/auth.py", "outcome": "migrate", "status": "verified", "next_action": "none — shop manager denied other shop in UI and in direct database calls; guests cannot write"},
+    {"capability": "business rules: derived stock, overdraw guards, decoupled delivery, difference reconciliation, adjustment reason, audit log", "source": "backend/app/services/transactions.py, stock.py", "outcome": "migrate", "status": "verified", "next_action": "none — receipt, dispatch (godown down, shop unchanged), confirm with difference (shop up by received qty) verified"},
+    {"capability": "alert engine", "source": "backend/app/services/alert_engine.py", "outcome": "migrate", "status": "implemented", "next_action": "Alert scan and verify/resolve buttons not exercised in a browser check"},
+    {"capability": "forecast: 4-month rolling average, 10% buffer, zero floor, backtest MAE/MAPE", "source": "backend/app/services/forecast.py", "outcome": "migrate", "status": "verified", "next_action": "none — unit tests"},
+    {"capability": "monthly reports + CSV export", "source": "backend/app/services/reports.py", "outcome": "migrate", "status": "verified", "next_action": "none — page renders; CSV layout unit tested"},
+    {"capability": "ingestion API (POST /api/public/ingest/transaction, /api/public/ingest/stock; GET /api/public/transactions/live, /api/public/ingest/sources)", "source": "backend/app/routers/ingest.py", "outcome": "preserve", "status": "verified", "next_action": "Paths moved from /api/... to /api/public/...; callers must send X-Ingest-Key. Update device/script URLs at cutover"},
+    {"capability": "live simulator", "source": "backend/app/services/simulator_service.py", "outcome": "migrate", "status": "implemented", "next_action": "Runs in the browser while the Live Feed page is open (no background thread); not exercised in a browser check"},
+    {"capability": "maps: Leaflet + Tamil Nadu GeoJSON + Esri tiles", "source": "frontend/src/components/*Map.jsx", "outcome": "preserve", "status": "verified", "next_action": "none"},
+    {"capability": "secrets", "source": "backend/.env (excluded; JWT secret only)", "outcome": "replace", "status": "accepted", "next_action": "JWT secret not needed; INGEST_API_KEY generated"},
+    {"capability": "external providers (email, payments, storage, AI)", "source": "none detected", "outcome": "none", "status": "accepted", "next_action": "none"},
+    {"capability": "cutover", "source": "localhost-only deployment", "outcome": "publish", "status": "pending", "next_action": "Publish; point any ingest callers at the new URL with the ingest key"},
+    {"capability": "verification", "source": "-", "outcome": "verify", "status": "verified", "next_action": "none"}
+  ]
+}

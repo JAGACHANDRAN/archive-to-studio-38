@@ -40,11 +40,17 @@ function ResetPasswordPage() {
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
-    if (pw !== pw2) return toast.error("The two passwords don't match.");
+    if (pw !== pw2) {
+      toast.error("The two passwords don't match.");
+      return;
+    }
     setBusy(true);
     const { error } = await supabase.auth.updateUser({ password: pw });
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     toast.success("Password updated");
     navigate({ to: "/", replace: true });
   };

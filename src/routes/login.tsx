@@ -260,7 +260,10 @@ function ForgotPasswordDialog({ open, onOpenChange, initial }: { open: boolean; 
     setBusy(true);
     const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: `${window.location.origin}/reset-password` });
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     setSent(true);
   };
   return (

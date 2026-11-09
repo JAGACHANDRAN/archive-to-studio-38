@@ -282,7 +282,7 @@ export function TnNetworkOutline({ className }: { className?: string }) {
     if (!geo) return null;
     const projection = geoMercator().fitExtent([[6, 6], [294, 334]], geo as FeatureCollection<Geometry>);
     const path = geoPath(projection);
-    const nodes = geo.features.map((f) => projection(f.properties.label) ?? [0, 0]);
+    const nodes: [number, number][] = geo.features.map((f) => projection(f.properties.label) ?? [0, 0]);
     // Link each node to its two nearest neighbours for a simple network mesh.
     const links: [number, number, number, number][] = [];
     nodes.forEach((a, i) => {
@@ -291,7 +291,10 @@ export function TnNetworkOutline({ className }: { className?: string }) {
         .filter((x) => x.j > i)
         .sort((x, y) => x.d - y.d)
         .slice(0, 2)
-        .forEach(({ j }) => links.push([a[0], a[1], nodes[j]![0], nodes[j]![1]]));
+        .forEach(({ j }) => {
+          const b = nodes[j];
+          if (b) links.push([a[0], a[1], b[0], b[1]]);
+        });
     });
     return { paths: geo.features.map((f) => path(f) ?? ""), nodes, links };
   }, [geo]);

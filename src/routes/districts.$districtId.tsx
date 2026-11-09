@@ -90,7 +90,7 @@ function DistrictPage() {
         <KpiCard icon={Bell} label="Open Alerts" value={fmtInt(summary.openAlerts)} hint={`${summary.pendingDeliveries} pending/delayed deliveries`} tone="danger" valueTone={summary.openAlerts ? "danger" : undefined} />
       </div>
 
-      <div className="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-[1.3fr_1fr]">
+      <div className="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)]">
         <Panel
           title={`${summary.district.name} District Map`}
           action={<span className="text-[11px] text-muted-foreground">{godowns.length} godowns · {shops.length} shops</span>}

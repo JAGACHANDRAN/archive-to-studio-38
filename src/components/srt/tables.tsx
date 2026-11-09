@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 const MOVE_TONE: Record<string, string> = {
   RECEIPT: "text-success",
   DELIVERY_IN: "text-success",
+  CONFIRMED_DELIVERY: "text-success",
   DISPATCH: "text-danger",
   DISTRIBUTION: "text-danger",
   ADJUSTMENT: "text-warning-foreground",

@@ -1,4 +1,4 @@
-import { Bar, BarChart, CartesianGrid, Cell, Legend, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, Cell, LabelList, Legend, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { fmtInt, shortMonth } from "@/lib/format";
 
 const axis = { fontSize: 11, fill: "var(--color-muted-foreground)" };
@@ -8,25 +8,33 @@ const kTick = (v: number) => (v >= 1000 ? `${Math.round(v / 1000)}k` : String(v)
 export function DistributionBar({ data }: { data: { name: string; kg: number }[] }) {
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <BarChart data={data} margin={{ top: 8, right: 8, left: -12, bottom: 0 }}>
+      <BarChart data={data} margin={{ top: 22, right: 8, left: -12, bottom: 0 }}>
+        <defs>
+          <linearGradient id="dist-bar" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="var(--color-primary)" />
+            <stop offset="100%" stopColor="var(--color-info)" stopOpacity={0.85} />
+          </linearGradient>
+        </defs>
         <CartesianGrid vertical={false} stroke="var(--color-border)" />
-        <XAxis dataKey="name" tick={axis} tickLine={false} axisLine={false} interval={0} />
-        <YAxis tick={axis} tickLine={false} axisLine={false} tickFormatter={kTick} />
+        <XAxis dataKey="name" tick={{ ...axis, fontSize: 10 }} tickLine={false} axisLine={false} interval={0} />
+        <YAxis tick={axis} tickLine={false} axisLine={false} tickFormatter={kTick} width={40} />
         <Tooltip contentStyle={tooltipStyle} formatter={(v: number) => [`${fmtInt(v)} kg`, "Distributed"]} cursor={{ fill: "var(--color-muted)" }} />
-        <Bar dataKey="kg" fill="var(--color-primary)" radius={[6, 6, 0, 0]} maxBarSize={38} />
+        <Bar dataKey="kg" fill="url(#dist-bar)" radius={[6, 6, 0, 0]} maxBarSize={40}>
+          <LabelList dataKey="kg" position="top" formatter={(v: number) => kTick(v).toUpperCase()} style={{ fontSize: 11, fontWeight: 700, fill: "var(--color-foreground)" }} />
+        </Bar>
       </BarChart>
     </ResponsiveContainer>
   );
 }
 
-export function StockDonut({ normal, low, critical, centerLabel, centerValue }: { normal: number; low: number; critical: number; centerLabel: string; centerValue: string }) {
+export function StockDonut({ normal, low, critical, centerLabel, centerValue, size = 150 }: { normal: number; low: number; critical: number; centerLabel: string; centerValue: string; size?: number }) {
   const data = [
     { name: "Normal", value: normal, color: "var(--color-success)" },
     { name: "Low Stock", value: low, color: "var(--color-warning)" },
     { name: "Critical", value: critical, color: "var(--color-danger)" },
   ];
   return (
-    <div className="relative h-[150px] w-full">
+    <div className="relative w-full" style={{ height: size }}>
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie data={data} dataKey="value" innerRadius="68%" outerRadius="95%" paddingAngle={2} stroke="none" startAngle={90} endAngle={-270}>

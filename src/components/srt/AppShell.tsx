@@ -8,6 +8,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
 import { ROLE_LABELS } from "@/lib/rbac";
+import { TN_DISTRICTS, districtSlug } from "@/lib/tn-districts";
 import { alertsQuery, districtsQuery, godownStockQuery, shopStockQuery } from "@/lib/data";
 
 const NAV = [
@@ -23,9 +24,9 @@ const NAV = [
   { to: "/settings", label: "Settings", icon: Settings },
 ] as const;
 
-function RiceMark() {
+export function RiceMark({ size = 22 }: { size?: number }) {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
       <path d="M2 22 16 8" />
       <path d="M3.47 12.53 5 11l1.53 1.53a3.5 3.5 0 0 1 0 4.95l-1.53 1.52" />
       <path d="M7.47 8.53 9 7l1.53 1.53a3.5 3.5 0 0 1 0 4.95L9 15" />
@@ -50,60 +51,43 @@ function Sidebar({ open, onToggle }: { open: boolean; onToggle: () => void }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
   const openAlerts = useOpenAlerts();
   return (
-    <aside className={cn("sticky top-0 z-50 hidden h-screen shrink-0 flex-col justify-between border-r border-sidebar-border bg-sidebar text-sidebar-foreground transition-all duration-300 md:flex", open ? "w-[240px]" : "w-[72px]")}>
-      <div>
-        <div className={cn("flex items-center border-b border-sidebar-border", open ? "justify-between px-4 py-4" : "justify-center p-3")}>
-          <Link to="/" className="flex items-center gap-2.5 overflow-hidden">
-            <div className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-sidebar-ring/30 bg-sidebar-primary/20 text-sidebar-ring">
-              <RiceMark />
-            </div>
-            {open && (
-              <div className="leading-tight">
-                <p className="truncate text-[13.5px] font-bold tracking-tight text-sidebar-accent-foreground">Smart Ration Tracker</p>
-                <p className="mt-0.5 truncate text-[9.5px] uppercase tracking-wider text-sidebar-muted">Tamil Nadu PDS</p>
-              </div>
-            )}
-          </Link>
-          {open && (
-            <button onClick={onToggle} title="Collapse menu" className="rounded-lg p-1.5 text-sidebar-muted transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
-              <ChevronLeft className="size-[18px]" />
-            </button>
-          )}
-        </div>
-        <nav className="p-2.5">
-          <ul className="space-y-1">
-            {NAV.map((item) => {
-              const active = "exact" in item && item.exact ? path === item.to : path.startsWith(item.to);
-              const Icon = item.icon;
-              return (
-                <li key={item.to}>
-                  <Link
-                    to={item.to}
-                    title={!open ? item.label : undefined}
-                    className={cn(
-                      "flex w-full items-center rounded-lg py-2.5 text-[13.5px] font-medium transition-all",
-                      open ? "gap-3 px-3.5" : "justify-center",
-                      active ? "bg-sidebar-primary font-semibold text-sidebar-primary-foreground shadow-primary" : "text-sidebar-muted hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-                    )}
-                  >
-                    <Icon className="size-[18px] shrink-0" />
-                    {open && <span className="flex-1 truncate text-left">{item.label}</span>}
-                    {open && "badge" in item && openAlerts > 0 && (
-                      <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-danger px-1 text-[10px] font-bold text-primary-foreground">{openAlerts}</span>
-                    )}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-      </div>
+    <aside className={cn("sticky top-[60px] z-30 hidden h-[calc(100vh-60px)] shrink-0 flex-col justify-between bg-sidebar text-sidebar-foreground transition-all duration-300 md:flex", open ? "w-[236px]" : "w-[72px]")}>
+      <nav className="overflow-y-auto p-3">
+        <ul className="space-y-1">
+          {NAV.map((item) => {
+            const active = "exact" in item && item.exact ? path === item.to : path.startsWith(item.to);
+            const Icon = item.icon;
+            return (
+              <li key={item.to}>
+                <Link
+                  to={item.to}
+                  title={!open ? item.label : undefined}
+                  className={cn(
+                    "relative flex w-full items-center rounded-lg py-2.5 text-[13.5px] font-medium transition-all",
+                    open ? "gap-3 px-3.5" : "justify-center",
+                    active ? "bg-sidebar-primary font-semibold text-sidebar-primary-foreground shadow-primary" : "text-sidebar-foreground/75 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+                  )}
+                >
+                  <Icon className="size-[18px] shrink-0" />
+                  {open && <span className="flex-1 truncate text-left">{item.label}</span>}
+                  {"badge" in item && openAlerts > 0 && (
+                    <span className={cn("flex h-5 min-w-5 items-center justify-center rounded-full bg-danger px-1 text-[10px] font-bold text-primary-foreground", !open && "absolute right-1.5 top-1 h-4 min-w-4 text-[9px]")}>{openAlerts}</span>
+                  )}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
       <div className="border-t border-sidebar-border p-3">
         {open ? (
-          <p className="text-center text-[9.5px] leading-tight text-sidebar-muted">Demo Dataset — Not Official Government Data</p>
+          <div className="rounded-lg border border-sidebar-border bg-sidebar-accent/60 px-3 py-2.5">
+            <p className="flex items-center gap-1.5 text-[10.5px] font-semibold text-sidebar-accent-foreground"><Info className="size-3.5 shrink-0 text-warning" /> Demo Dataset</p>
+            <p className="mt-0.5 text-[10px] leading-snug text-sidebar-muted">Not Official Government Data</p>
+          </div>
         ) : (
-          <button onClick={onToggle} title="Expand menu" className="mx-auto flex size-10 items-center justify-center rounded-lg text-sidebar-muted hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
-            <Menu className="size-[19px]" />
+          <button onClick={onToggle} title="Demo Dataset — Not Official Government Data · Expand menu" className="mx-auto flex size-10 items-center justify-center rounded-lg text-warning hover:bg-sidebar-accent">
+            <Info className="size-[18px]" />
           </button>
         )}
       </div>
@@ -123,7 +107,7 @@ function GlobalSearch() {
     if (!term) return [];
     const match = (...xs: string[]) => xs.some((x) => x.toLowerCase().includes(term));
     return [
-      ...districts.filter((d) => match(d.name, d.code)).map((d) => ({ kind: "DISTRICT", label: d.name, code: d.code, go: () => navigate({ to: "/districts/$districtId", params: { districtId: String(d.id) } }) })),
+      ...TN_DISTRICTS.filter((d) => match(d.name)).map((d) => ({ kind: "DISTRICT", label: d.name, code: districts.find((x) => districtSlug(x.name) === d.slug)?.code ?? "No demo data", go: () => navigate({ to: "/districts/$districtId", params: { districtId: d.slug } }) })),
       ...godowns.filter((g) => match(g.name, g.id)).map((g) => ({ kind: "GODOWN", label: g.name, code: g.id, go: () => navigate({ to: "/godowns/$godownId", params: { godownId: g.id } }) })),
       ...shops.filter((s) => match(s.name, s.id)).map((s) => ({ kind: "SHOP", label: s.name, code: s.id, go: () => navigate({ to: "/shops/$shopId", params: { shopId: s.id } }) })),
     ].slice(0, 10);
@@ -131,7 +115,7 @@ function GlobalSearch() {
 
   return (
     <div className="relative w-full max-w-[340px]">
-      <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+      <Search className="pointer-events-none absolute left-3.5 top-1/2 z-10 size-4 -translate-y-1/2 text-header-foreground/60" />
       <input
         value={q}
         onChange={(e) => setQ(e.target.value)}
@@ -139,7 +123,7 @@ function GlobalSearch() {
         onBlur={() => setTimeout(() => setFocused(false), 150)}
         placeholder="Search district, godown or shop..."
         aria-label="Search district, godown or shop"
-        className="h-9 w-full rounded-full border border-transparent bg-muted pl-9 pr-4 text-xs outline-none transition-all focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/20"
+        className="h-9 w-full rounded-full border border-header-foreground/15 bg-header-foreground/10 pl-9 pr-4 text-xs text-header-foreground outline-none transition-all placeholder:text-header-foreground/55 focus:border-primary focus:bg-card focus:text-foreground focus:placeholder:text-muted-foreground focus:ring-2 focus:ring-primary/30"
       />
       {focused && q.trim() && (
         <div className="absolute left-0 right-0 top-11 z-50 max-h-72 overflow-y-auto rounded-xl border border-border bg-popover shadow-float">
@@ -166,36 +150,49 @@ function Header({ onToggle, sidebarOpen }: { onToggle: () => void; sidebarOpen: 
   const { actor, session, signOut } = useAuth();
   const openAlerts = useOpenAlerts();
   const navigate = useNavigate();
+  const name = actor?.fullName ?? session?.user.email ?? "";
   return (
-    <header className="sticky top-0 z-40 flex h-[60px] items-center justify-between gap-3 border-b border-border bg-card px-4 sm:px-5">
-      <div className="flex flex-1 items-center gap-3">
-        <button onClick={onToggle} title={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"} className="hidden rounded-lg border border-border p-2 text-muted-foreground shadow-card hover:bg-muted hover:text-foreground md:flex">
-          <Menu className="size-[18px]" />
-        </button>
+    <header className="sticky top-0 z-40 flex h-[60px] items-center gap-3 bg-header pr-3 text-header-foreground shadow-float sm:pr-5">
+      <div className={cn("flex h-full shrink-0 items-center gap-2 pl-3 sm:pl-4 md:transition-all md:duration-300", sidebarOpen ? "md:w-[236px]" : "md:w-[72px]")}>
+        <Link to="/" className="flex min-w-0 items-center gap-2.5">
+          <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-header-foreground/10 text-sidebar-ring">
+            <RiceMark />
+          </div>
+          <div className={cn("min-w-0 leading-tight", !sidebarOpen && "md:hidden")}>
+            <p className="truncate text-[14px] font-bold tracking-tight">Smart Ration Tracker</p>
+            <p className="mt-0.5 truncate text-[9.5px] text-header-foreground/60">Tamil Nadu Public Distribution System</p>
+          </div>
+        </Link>
+      </div>
+      <button onClick={onToggle} title={sidebarOpen ? "Collapse menu" : "Expand menu"} className="hidden rounded-lg p-2 text-header-foreground/70 hover:bg-header-foreground/10 hover:text-header-foreground md:flex">
+        {sidebarOpen ? <ChevronLeft className="size-[18px]" /> : <Menu className="size-[18px]" />}
+      </button>
+      <div className="hidden min-w-0 flex-1 sm:block">
         <GlobalSearch />
       </div>
-      <div className="flex items-center gap-3">
-        <Link to="/alerts" className="relative rounded-full p-2 text-muted-foreground hover:bg-muted hover:text-foreground" aria-label="Alerts">
-          <Bell className="size-[18px]" />
+      <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
+        <Link to="/alerts" className="relative rounded-full p-2 text-header-foreground/80 hover:bg-header-foreground/10 hover:text-header-foreground" aria-label="Alerts">
+          <Bell className="size-[19px]" />
           {openAlerts > 0 && (
-            <span className="absolute right-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full border-2 border-card bg-danger px-0.5 text-[9px] font-bold text-primary-foreground">{openAlerts}</span>
+            <span className="absolute right-0.5 top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full border-2 border-header bg-danger px-0.5 text-[9px] font-bold text-primary-foreground">{openAlerts}</span>
           )}
         </Link>
         {session ? (
-          <div className="flex items-center gap-2 border-l border-border pl-3">
-            <div className="flex size-8 items-center justify-center rounded-full border border-border bg-muted text-muted-foreground">
-              <User className="size-4" />
+          <div className="flex items-center gap-2 border-l border-header-foreground/15 pl-3">
+            <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-[12px] font-bold text-primary-foreground">
+              {name ? name.charAt(0).toUpperCase() : <User className="size-4" />}
             </div>
             <div className="hidden leading-tight sm:block">
-              <p className="max-w-[180px] truncate text-xs font-semibold text-foreground">{actor?.fullName ?? session.user.email}</p>
-              <p className="text-[10px] text-muted-foreground">
+              <p className="max-w-[170px] truncate text-xs font-semibold">{name}</p>
+              <p className="text-[10px] text-header-foreground/60">
                 {actor ? `${ROLE_LABELS[actor.role]}${actor.shopId ? ` · ${actor.shopId}` : actor.godownId ? ` · ${actor.godownId}` : ""}` : "Viewer"}
               </p>
             </div>
             <button
-              onClick={async () => { await signOut(); navigate({ to: "/" }); }}
+              onClick={async () => { await signOut(); navigate({ to: "/login", replace: true }); }}
               title="Sign out"
-              className="rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-foreground"
+              aria-label="Sign out"
+              className="rounded-lg p-2 text-header-foreground/70 hover:bg-header-foreground/10 hover:text-header-foreground"
             >
               <LogOut className="size-4" />
             </button>
@@ -229,16 +226,16 @@ function MobileNav() {
 export function AppShell({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(true);
   return (
-    <div className="flex min-h-screen bg-background text-foreground">
-      <Sidebar open={open} onToggle={() => setOpen((o) => !o)} />
-      <div className="flex min-w-0 flex-1 flex-col">
-        <div className="z-30 flex shrink-0 items-center justify-center gap-1.5 border-b border-warning/40 bg-notice px-4 py-1 text-center text-[11px] font-semibold text-notice-foreground">
-          <Info className="size-3.5 shrink-0" />
-          <span>Demo Dataset — Not Official Government Data</span>
-        </div>
-        <MobileNav />
-        <Header onToggle={() => setOpen((o) => !o)} sidebarOpen={open} />
-        <main className="flex-1 px-4 py-5 sm:px-7">{children}</main>
+    <div className="flex min-h-screen flex-col bg-background text-foreground">
+      <Header onToggle={() => setOpen((o) => !o)} sidebarOpen={open} />
+      <div className="flex items-center justify-center gap-1.5 border-b border-warning/40 bg-notice px-4 py-1 text-center text-[11px] font-semibold text-notice-foreground md:hidden">
+        <Info className="size-3.5 shrink-0" />
+        <span>Demo Dataset — Not Official Government Data</span>
+      </div>
+      <MobileNav />
+      <div className="flex flex-1">
+        <Sidebar open={open} onToggle={() => setOpen((o) => !o)} />
+        <main className="min-w-0 flex-1 px-4 py-5 sm:px-6 lg:px-7">{children}</main>
       </div>
     </div>
   );

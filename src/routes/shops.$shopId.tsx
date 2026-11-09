@@ -1,3 +1,4 @@
+import { districtSlug } from "@/lib/tn-districts";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Store, Users, HandCoins, Truck, Gauge } from "lucide-react";
 import { ensureCore, useCore } from "@/lib/core";
@@ -58,7 +59,7 @@ function ShopPage() {
         subtitle={`${s.id} · supplied by ${s.godown_id} · ${district?.name ?? ""} district`}
         crumbs={[
           { label: "Dashboard", to: "/" },
-          ...(district ? [{ label: district.name, to: "/districts/$districtId", params: { districtId: String(district.id) } }] : []),
+          ...(district ? [{ label: district.name, to: "/districts/$districtId", params: { districtId: districtSlug(district.name) } }] : []),
           { label: s.godown_id, to: "/godowns/$godownId", params: { godownId: s.godown_id } },
           { label: s.id },
         ]}

@@ -933,6 +933,10 @@ export type Database = {
       }
       _scan_alerts: { Args: never; Returns: Json }
       activate_data_source: { Args: { _source_name: string }; Returns: Json }
+      attach_demo_identity: {
+        Args: { _email: string; _user_id: string }
+        Returns: undefined
+      }
       confirm_delivery: {
         Args: {
           _delivery_id: string

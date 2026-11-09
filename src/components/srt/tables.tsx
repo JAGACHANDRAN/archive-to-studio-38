@@ -12,6 +12,8 @@ const MOVE_TONE: Record<string, string> = {
   ADJUSTMENT: "text-warning-foreground",
 };
 
+const OUTFLOW = new Set(["DISPATCH", "DISTRIBUTION"]);
+
 export function MovementsTable({ type, id }: { type: "godown" | "shop"; id: string }) {
   const { data = [], isLoading } = useQuery(movementsQuery(type, id));
   if (isLoading) return <Empty>Loading movements…</Empty>;
@@ -23,7 +25,7 @@ export function MovementsTable({ type, id }: { type: "godown" | "shop"; id: stri
           <tr key={m.id}>
             <Td className="whitespace-nowrap">{fmtDateTime(m.timestamp)}</Td>
             <Td className={cn("font-semibold", MOVE_TONE[m.movement_type])}>{m.movement_type.replace(/_/g, " ")}</Td>
-            <Td className="text-right">{fmtSigned(m.quantity_kg)}</Td>
+            <Td className="text-right">{fmtSigned(OUTFLOW.has(m.movement_type) ? -Math.abs(m.quantity_kg) : m.movement_type === "ADJUSTMENT" ? m.quantity_kg : Math.abs(m.quantity_kg))}</Td>
             <Td className="font-mono text-[11px] text-muted-foreground">{m.reference_id ?? "—"}</Td>
             <Td className="text-muted-foreground">{m.created_by}</Td>
           </tr>

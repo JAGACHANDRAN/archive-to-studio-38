@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -40,7 +40,10 @@ function RiceMark() {
 
 function useOpenAlerts() {
   const { data } = useQuery(alertsQuery());
-  return data?.filter((a) => a.status === "OPEN").length ?? 0;
+  // Counts appear after hydration so server and browser render the same first frame.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  return mounted ? (data?.filter((a) => a.status === "OPEN").length ?? 0) : 0;
 }
 
 function Sidebar({ open, onToggle }: { open: boolean; onToggle: () => void }) {

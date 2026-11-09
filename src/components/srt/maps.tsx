@@ -96,7 +96,7 @@ export function TnMap({
       .scaleExtent([1, 10])
       .translateExtent([[-W * 0.25, -H * 0.25], [W * 1.25, H * 1.25]])
       // Plain scrolling keeps scrolling the page; pinch / Ctrl+scroll zooms the map.
-      .filter((e: Event) => (e.type === "wheel" ? (e as WheelEvent).ctrlKey || (e as WheelEvent).metaKey : !(e as MouseEvent).button))
+      .filter((e: Event) => (e.type === "wheel" ? (e as WheelEvent).ctrlKey || (e as WheelEvent).metaKey : !(e as globalThis.MouseEvent).button))
       .on("zoom", (e: { transform: ZoomTransform }) => setT(e.transform));
     const sel = select(el);
     sel.call(z);
@@ -193,12 +193,13 @@ export function TnMap({
                     textAnchor={small ? "start" : "middle"}
                     fontSize={fs}
                     className={cn(
-                      "paint-order-stroke stroke-card",
+                      "stroke-card",
                       strong ? "fill-foreground font-bold" : "fill-foreground/70 font-medium",
                       focusSlug && d.slug !== focusSlug && "fill-muted-foreground",
                     )}
                     strokeWidth={2.4 / k}
                     strokeLinejoin="round"
+                    style={{ paintOrder: "stroke" }}
                   >
                     {d.name}
                   </text>

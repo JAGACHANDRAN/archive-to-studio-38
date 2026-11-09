@@ -90,7 +90,7 @@ function DistrictPage() {
         <KpiCard icon={Bell} label="Open Alerts" value={fmtInt(summary.openAlerts)} hint={`${summary.pendingDeliveries} pending/delayed deliveries`} tone="danger" valueTone={summary.openAlerts ? "danger" : undefined} />
       </div>
 
-      <div className="mt-4 grid gap-4 xl:grid-cols-[1.3fr_1fr]">
+      <div className="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-[1.3fr_1fr]">
         <Panel
           title={`${summary.district.name} District Map`}
           action={<span className="text-[11px] text-muted-foreground">{godowns.length} godowns · {shops.length} shops</span>}
@@ -173,7 +173,7 @@ function DistrictPage() {
         </DataTable>
       </Panel>
 
-      <div className="mt-4 grid gap-4 xl:grid-cols-2">
+      <div className="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-2">
         <Panel title="Recent Deliveries"><DeliveriesTable deliveries={deliveries} /></Panel>
         <Panel title="Physical Inspections"><ReconciliationTable rows={recon} /></Panel>
       </div>
@@ -191,7 +191,7 @@ function MapOnlyDistrict({ name, slug, withData }: { name: string; slug: string;
         subtitle="District boundary · no godowns or fair price shops in the demo dataset yet"
         crumbs={[{ label: "Dashboard", to: "/" }, { label: "Districts", to: "/districts" }, { label: name }]}
       />
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
         <Panel title={`${name} District Map`} bodyClassName="h-[520px] overflow-hidden rounded-lg border border-border bg-gradient-to-b from-primary-soft/60 to-card">
           <ClientOnly fallback={<div className="h-full w-full animate-pulse bg-muted" />}>
             <TnMap
@@ -204,7 +204,7 @@ function MapOnlyDistrict({ name, slug, withData }: { name: string; slug: string;
             />
           </ClientOnly>
         </Panel>
-        <div className="grid content-start gap-4">
+        <div className="grid min-w-0 grid-cols-1 content-start gap-4">
           <Panel>
             <div className="flex items-start gap-3">
               <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary-soft text-primary"><MapPinned className="size-5" /></span>

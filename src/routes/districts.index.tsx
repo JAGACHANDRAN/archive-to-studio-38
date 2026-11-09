@@ -49,7 +49,7 @@ function DistrictsPage() {
         crumbs={[{ label: "Dashboard", to: "/" }, { label: "Districts" }]}
       />
 
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
         <Panel title="Tamil Nadu District Map" bodyClassName="flex flex-col gap-3">
           <div className="aspect-[100/115] w-full rounded-lg bg-gradient-to-b from-primary-soft/60 to-card">
             <ClientOnly fallback={<div className="h-full w-full animate-pulse rounded-lg bg-muted" />}>
@@ -84,7 +84,7 @@ function DistrictsPage() {
           </div>
         </Panel>
 
-        <div className="grid content-start gap-4">
+        <div className="grid min-w-0 grid-cols-1 content-start gap-4">
           <div className="grid gap-3 sm:grid-cols-2">
             {rows.map((d) => (
               <Link key={d.district.id} to="/districts/$districtId" params={{ districtId: districtSlug(d.district.name) }} className="group">

@@ -69,7 +69,7 @@ function StateOverview() {
         <KpiCard icon={Bell} label="Alerts" value={fmtInt(s.openAlerts)} hint={s.openAlerts ? "Requires attention" : "All clear"} tone="danger" valueTone={s.openAlerts ? "danger" : undefined} />
       </div>
 
-      <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1.08fr)_minmax(0,1fr)]">
+      <div className="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1.08fr)_minmax(0,1fr)]">
         {/* Map */}
         <Panel title="Tamil Nadu Stock Map" className="xl:row-span-2" bodyClassName="flex flex-col gap-3">
           <div className="grid items-start gap-3 sm:grid-cols-[minmax(0,1fr)_156px]">
@@ -113,8 +113,9 @@ function StateOverview() {
         </Panel>
 
         {/* Charts */}
-        <div className="grid gap-4 md:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
-          <Panel title={<>Rice Distribution by District <span className="font-medium text-muted-foreground">({monthLabel(month)})</span></>} bodyClassName="h-[240px]">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)]">
+          <Panel title="Rice Distribution by District"
+            action={<span className="text-[11px] font-medium text-muted-foreground">{monthLabel(month)}</span>} bodyClassName="h-[240px]">
             <DistributionBar data={s.districts.map((d) => ({ name: d.district.name.replace("Tiruchirappalli", "Trichy"), kg: d.distributedKg }))} />
           </Panel>
           <Panel title="Shop Stock Status">
@@ -158,7 +159,7 @@ function StateOverview() {
         </Panel>
       </div>
 
-      <div className="mt-4 grid gap-4 xl:grid-cols-3">
+      <div className="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-3">
         <Panel title="Statewide Distribution Trend">
           <TrendLine data={s.trend} />
         </Panel>

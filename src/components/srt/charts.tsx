@@ -16,8 +16,8 @@ export function DistributionBar({ data }: { data: { name: string; kg: number }[]
           </linearGradient>
         </defs>
         <CartesianGrid vertical={false} stroke="var(--color-border)" />
-        <XAxis dataKey="name" tick={axis} tickLine={false} axisLine={false} interval={0} />
-        <YAxis tick={axis} tickLine={false} axisLine={false} tickFormatter={kTick} />
+        <XAxis dataKey="name" tick={{ ...axis, fontSize: 10 }} tickLine={false} axisLine={false} interval={0} />
+        <YAxis tick={axis} tickLine={false} axisLine={false} tickFormatter={kTick} width={40} />
         <Tooltip contentStyle={tooltipStyle} formatter={(v: number) => [`${fmtInt(v)} kg`, "Distributed"]} cursor={{ fill: "var(--color-muted)" }} />
         <Bar dataKey="kg" fill="url(#dist-bar)" radius={[6, 6, 0, 0]} maxBarSize={40}>
           <LabelList dataKey="kg" position="top" formatter={(v: number) => kTick(v).toUpperCase()} style={{ fontSize: 11, fontWeight: 700, fill: "var(--color-foreground)" }} />

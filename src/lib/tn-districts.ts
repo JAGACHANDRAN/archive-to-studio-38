@@ -40,3 +40,14 @@ export const TN_DISTRICTS: TnDistrict[] = [
   { name: "Viluppuram", slug: "viluppuram" },
   { name: "Virudhunagar", slug: "virudhunagar" },
 ];
+
+/** URL-safe slug for a district name ("Tiruchirappalli" → "tiruchirappalli"). */
+export const districtSlug = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+/** Resolve a /districts/$districtId param (slug, or a legacy numeric id) to a map district. */
+export function findTnDistrict(param: string, dbDistricts: { id: number; name: string }[]): TnDistrict | undefined {
+  const key = /^\d+$/.test(param) ? dbDistricts.find((d) => String(d.id) === param)?.name : param;
+  if (!key) return undefined;
+  const slug = districtSlug(key);
+  return TN_DISTRICTS.find((d) => d.slug === slug);
+}

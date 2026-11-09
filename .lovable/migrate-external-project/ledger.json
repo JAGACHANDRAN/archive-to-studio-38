@@ -1,0 +1,22 @@
+{
+  "source": "code-archive: Smart_Ration_Tracker.zip (FastAPI + SQLite backend, Jinja pages, React/Vite frontend)",
+  "capabilities": [
+    {"capability": "code: pages (state overview, district, godown, shop, operations, alerts, reports, login)", "source": "frontend/src + backend/app/templates", "outcome": "migrate", "status": "pending", "next_action": "Rebuild as TanStack routes using the React frontend's navy sidebar design"},
+    {"capability": "schema: 15 tables (districts, commodities, godowns, shops, stock_movements, deliveries, monthly_distribution, measurements, predictions, alerts, users, audit_logs, stock_levels, transactions, data_source_settings)", "source": "backend/app/models/entities.py", "outcome": "migrate", "status": "pending", "next_action": "Recreate in Lovable Cloud with RLS"},
+    {"capability": "records: bundled demo CSVs (5 districts, 10 godowns, 50 shops, 2388 movements, deliveries, 300 monthly rows, 5 measurements)", "source": "backend/data/*.csv (sanitized)", "outcome": "migrate", "status": "pending", "next_action": "Import via migration inserts; verify counts"},
+    {"capability": "records: live SQLite database smart_ration.db", "source": "not included in archive", "outcome": "migrate", "status": "pending", "next_action": "Ask user for table exports if the live database has changes beyond the bundled CSVs"},
+    {"capability": "auth identities: 6 demo role accounts (no real emails, shared published demo password)", "source": "backend/data/users.csv", "outcome": "migrate", "status": "pending", "next_action": "Recreate as Lovable Cloud accounts with one-click demo sign-in; keep original user id mapping"},
+    {"capability": "authorization: 6 roles + location scoping (district/godown/shop)", "source": "backend/app/services/auth.py", "outcome": "migrate", "status": "pending", "next_action": "user_roles table + security-definer write functions with scope checks"},
+    {"capability": "business rules: derived stock, over-dispatch/over-distribution guards, decoupled delivery, difference reconciliation, mandatory adjustment reason, audit log", "source": "backend/app/services/transactions.py, stock.py", "outcome": "migrate", "status": "pending", "next_action": "Database functions"},
+    {"capability": "alert engine: low stock, delayed delivery, discrepancy (neutral wording), missing data, duplicate prevention, mandatory notes", "source": "backend/app/services/alert_engine.py", "outcome": "migrate", "status": "pending", "next_action": "Database functions"},
+    {"capability": "forecast: 4-month rolling average, 10% buffer, zero floor, backtest MAE", "source": "backend/app/services/forecast.py", "outcome": "migrate", "status": "pending", "next_action": "Database function + UI"},
+    {"capability": "monthly reports + CSV export", "source": "backend/app/services/reports.py", "outcome": "migrate", "status": "pending", "next_action": "Client-side report + CSV download"},
+    {"capability": "public ingestion API (POST /api/ingest/transaction, /api/ingest/stock) used by IoT/simulator callers", "source": "backend/app/routers/ingest.py", "outcome": "preserve", "status": "pending", "next_action": "Server routes under /api/public/ingest/* protected by an ingest key"},
+    {"capability": "live simulator background thread", "source": "backend/app/services/simulator_service.py", "outcome": "migrate", "status": "pending", "next_action": "Replace background thread with an on-page simulator that runs while the page is open"},
+    {"capability": "maps: Leaflet + Tamil Nadu GeoJSON + Esri tiles", "source": "frontend/src/components/*Map.jsx", "outcome": "preserve", "status": "pending", "next_action": "Client-only Leaflet"},
+    {"capability": "secrets", "source": "backend/.env (excluded; JWT secret only)", "outcome": "replace", "status": "accepted", "next_action": "JWT secret not needed with Lovable auth; ingest key generated in Lovable secrets"},
+    {"capability": "external providers (email, payments, storage, AI)", "source": "none detected", "outcome": "none", "status": "accepted", "next_action": "none"},
+    {"capability": "cutover", "source": "localhost-only deployment", "outcome": "publish", "status": "pending", "next_action": "Publish when ready; point any ingest callers at the new URL"},
+    {"capability": "verification", "source": "-", "outcome": "verify", "status": "pending", "next_action": "Build, routes, demo sign-in, dispatch/confirm flow, RBAC denial"}
+  ]
+}

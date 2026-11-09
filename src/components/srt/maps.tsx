@@ -274,3 +274,39 @@ export function MapLegendDot({ className, label, hint }: { className: string; la
     </li>
   );
 }
+
+/** Decorative Tamil Nadu outline with network nodes (login hero). */
+export function TnNetworkOutline({ className }: { className?: string }) {
+  const { data: geo } = useQuery(tnGeoQuery());
+  const drawn = useMemo(() => {
+    if (!geo) return null;
+    const projection = geoMercator().fitExtent([[6, 6], [294, 334]], geo as FeatureCollection<Geometry>);
+    const path = geoPath(projection);
+    const nodes = geo.features.map((f) => projection(f.properties.label) ?? [0, 0]);
+    // Link each node to its two nearest neighbours for a simple network mesh.
+    const links: [number, number, number, number][] = [];
+    nodes.forEach((a, i) => {
+      nodes
+        .map((b, j) => ({ j, d: (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 }))
+        .filter((x) => x.j > i)
+        .sort((x, y) => x.d - y.d)
+        .slice(0, 2)
+        .forEach(({ j }) => links.push([a[0], a[1], nodes[j]![0], nodes[j]![1]]));
+    });
+    return { paths: geo.features.map((f) => path(f) ?? ""), nodes, links };
+  }, [geo]);
+  if (!drawn) return <div className={className} />;
+  return (
+    <svg viewBox="0 0 300 340" className={className} aria-hidden>
+      <g className="fill-primary/25 stroke-card/80" strokeWidth={0.8}>
+        {drawn.paths.map((d, i) => <path key={i} d={d} />)}
+      </g>
+      <g className="stroke-card" strokeWidth={0.7} opacity={0.75}>
+        {drawn.links.map(([x1, y1, x2, y2], i) => <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} />)}
+      </g>
+      <g className="fill-card">
+        {drawn.nodes.map(([x, y], i) => <circle key={i} cx={x} cy={y} r={2.2} />)}
+      </g>
+    </svg>
+  );
+}

@@ -8,6 +8,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
 import { ROLE_LABELS } from "@/lib/rbac";
+import { TN_DISTRICTS, districtSlug } from "@/lib/tn-districts";
 import { alertsQuery, districtsQuery, godownStockQuery, shopStockQuery } from "@/lib/data";
 
 const NAV = [
@@ -106,7 +107,7 @@ function GlobalSearch() {
     if (!term) return [];
     const match = (...xs: string[]) => xs.some((x) => x.toLowerCase().includes(term));
     return [
-      ...districts.filter((d) => match(d.name, d.code)).map((d) => ({ kind: "DISTRICT", label: d.name, code: d.code, go: () => navigate({ to: "/districts/$districtId", params: { districtId: String(d.id) } }) })),
+      ...TN_DISTRICTS.filter((d) => match(d.name)).map((d) => ({ kind: "DISTRICT", label: d.name, code: districts.find((x) => districtSlug(x.name) === d.slug)?.code ?? "No demo data", go: () => navigate({ to: "/districts/$districtId", params: { districtId: d.slug } }) })),
       ...godowns.filter((g) => match(g.name, g.id)).map((g) => ({ kind: "GODOWN", label: g.name, code: g.id, go: () => navigate({ to: "/godowns/$godownId", params: { godownId: g.id } }) })),
       ...shops.filter((s) => match(s.name, s.id)).map((s) => ({ kind: "SHOP", label: s.name, code: s.id, go: () => navigate({ to: "/shops/$shopId", params: { shopId: s.id } }) })),
     ].slice(0, 10);

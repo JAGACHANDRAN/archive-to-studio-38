@@ -28,3 +28,11 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Project rules
+
+- Stock balances are always derived from `stock_movements` (views `v_godown_stock` / `v_shop_stock`); never store or edit a balance directly — the ledger is the source of truth.
+- All writes go through security-definer database functions that check role and location scope; the client-side `src/lib/rbac.ts` mirror only shapes the UI, so keep both in sync.
+- Pure business calculations (forecast, report, summaries, simulator) live in `src/lib/*.ts` with unit tests in `src/test/` so rules are testable without the database.
+- Leaflet is imported dynamically inside effects and rendered behind `<ClientOnly>` because it touches `window` during SSR.
+- External device ingestion uses `/api/public/ingest/*` server routes guarded by the `INGEST_API_KEY` header check; they call the same database functions with the service role.

@@ -24,9 +24,9 @@ const NAV = [
   { to: "/settings", label: "Settings", icon: Settings },
 ] as const;
 
-function RiceMark() {
+export function RiceMark({ size = 22 }: { size?: number }) {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
       <path d="M2 22 16 8" />
       <path d="M3.47 12.53 5 11l1.53 1.53a3.5 3.5 0 0 1 0 4.95l-1.53 1.52" />
       <path d="M7.47 8.53 9 7l1.53 1.53a3.5 3.5 0 0 1 0 4.95L9 15" />

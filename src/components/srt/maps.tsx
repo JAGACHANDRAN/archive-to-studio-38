@@ -157,11 +157,11 @@ export function TnMap({
                   fill,
                   "outline-none transition-[fill-opacity,stroke] duration-150",
                   onSelect && "cursor-pointer",
-                  isFocus ? "stroke-primary" : isHover ? "stroke-sidebar" : "stroke-card",
-                  isHover && "brightness-95",
+                  "stroke-card",
+                  isHover && !isFocus && "brightness-95",
                   "focus-visible:stroke-primary",
                 )}
-                strokeWidth={isFocus ? 2.4 : isHover ? 2 : 1}
+                strokeWidth={1}
                 vectorEffect="non-scaling-stroke"
                 onMouseMove={(e) => track(e, { kind: "district", slug: d.slug, name: d.name })}
                 onMouseLeave={() => setHover(null)}
@@ -176,12 +176,21 @@ export function TnMap({
             );
           })}
 
+          {/* Outline overlay so the focused / hovered border is never covered by neighbours. */}
+          <g className="pointer-events-none fill-none">
+            {drawn.districts
+              .filter((d) => d.slug === focusSlug || (hover?.kind === "district" && hover.slug === d.slug))
+              .map((d) => (
+                <path key={`o-${d.slug}`} d={d.d} className={d.slug === focusSlug ? "stroke-primary" : "stroke-header"} strokeWidth={d.slug === focusSlug ? 2.6 : 2} vectorEffect="non-scaling-stroke" strokeLinejoin="round" />
+              ))}
+          </g>
+
           {/* District labels; tiny districts (Chennai) get a callout into the sea. */}
           <g className="pointer-events-none">
             {drawn.districts.map((d) => {
-              const small = !focusSlug && d.area < 120;
+              const small = !focusSlug && d.area < 160;
               const strong = emphasize?.has(d.slug) || d.slug === focusSlug;
-              const fs = (focusSlug ? (d.slug === focusSlug ? 15 : 10) : strong ? 9.5 : 8) / k;
+              const fs = (focusSlug ? (d.slug === focusSlug ? 16 : 11) : strong ? 12.5 : 10) / k;
               const tx = small ? d.lx + 30 / k : d.lx;
               return (
                 <g key={d.slug}>

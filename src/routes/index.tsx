@@ -60,7 +60,7 @@ function StateOverview() {
         actions={<MonthSelect months={months} value={month} onChange={(m) => navigate({ search: { month: m } })} />}
       />
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-6">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
         <KpiCard icon={Package} label="Total Rice Stock" value={fmtInt(s.totalStockKg)} unit="kg" hint={`${fmtInt(s.godownStockKg)} kg in godowns`} tone="primary" />
         <KpiCard icon={Warehouse} label="Godowns" value={fmtInt(s.godownsCount)} hint="Across Tamil Nadu" tone="success" />
         <KpiCard icon={Store} label="Fair Price Shops" value={fmtInt(s.shopsCount)} hint={`${fmtInt(s.beneficiaries)} beneficiary cards`} tone="violet" />
@@ -69,11 +69,11 @@ function StateOverview() {
         <KpiCard icon={Bell} label="Alerts" value={fmtInt(s.openAlerts)} hint={s.openAlerts ? "Requires attention" : "All clear"} tone="danger" valueTone={s.openAlerts ? "danger" : undefined} />
       </div>
 
-      <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)]">
+      <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1.08fr)_minmax(0,1fr)]">
         {/* Map */}
         <Panel title="Tamil Nadu Stock Map" className="xl:row-span-2" bodyClassName="flex flex-col gap-3">
-          <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_168px]">
-            <div className="h-[460px] rounded-lg bg-gradient-to-b from-primary-soft/60 to-card sm:h-[540px]">
+          <div className="grid items-start gap-3 sm:grid-cols-[minmax(0,1fr)_156px]">
+            <div className="aspect-[100/116] w-full rounded-lg bg-gradient-to-b from-primary-soft/60 to-card">
               <ClientOnly fallback={<div className="h-full w-full animate-pulse rounded-lg bg-muted" />}>
                 <TnMap
                   ariaLabel="Map of Tamil Nadu districts coloured by stock status"
@@ -81,7 +81,7 @@ function StateOverview() {
                   emphasize={emphasize}
                   pins={pins}
                   showCompass
-                  aspect={1.18}
+                  aspect={1.16}
                   onSelect={(slug) => navigate({ to: "/districts/$districtId", params: { districtId: slug } })}
                   tooltipFor={(slug, name) => <DistrictTip name={name} d={bySlug.get(slug)} />}
                 />
@@ -113,14 +113,14 @@ function StateOverview() {
         </Panel>
 
         {/* Charts */}
-        <div className="grid gap-4 md:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]">
+        <div className="grid gap-4 md:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
           <Panel title={<>Rice Distribution by District <span className="font-medium text-muted-foreground">({monthLabel(month)})</span></>} bodyClassName="h-[240px]">
             <DistributionBar data={s.districts.map((d) => ({ name: d.district.name.replace("Tiruchirappalli", "Trichy"), kg: d.distributedKg }))} />
           </Panel>
           <Panel title="Shop Stock Status">
-            <div className="grid grid-cols-[130px_minmax(0,1fr)] items-center gap-3 md:grid-cols-1 lg:grid-cols-[130px_minmax(0,1fr)]">
+            <div className="grid grid-cols-[130px_minmax(0,1fr)] items-center gap-4 md:grid-cols-1">
               <StockDonut normal={s.status.normal} low={s.status.low} critical={s.status.critical} centerLabel="Shops" centerValue={fmtInt(s.shopsCount)} size={140} />
-              <ul className="space-y-3 text-xs">
+              <ul className="space-y-2.5 text-xs">
                 <HealthRow tone="bg-success" label="Normal" count={s.status.normal} pct={s.status.normalPct} />
                 <HealthRow tone="bg-warning" label="Low Stock" count={s.status.low} pct={s.status.lowPct} />
                 <HealthRow tone="bg-danger" label="Critical" count={s.status.critical} pct={s.status.criticalPct} />

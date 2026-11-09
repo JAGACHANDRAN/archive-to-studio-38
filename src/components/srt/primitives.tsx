@@ -32,16 +32,18 @@ export type Tone = keyof typeof TONES;
 export function KpiCard({ icon: Icon, label, value, unit, hint, tone = "primary", valueTone }: { icon: ComponentType<{ className?: string }>; label: string; value: ReactNode; unit?: string | undefined; hint?: ReactNode; tone?: Tone | undefined; valueTone?: "danger" | undefined }) {
   const t = TONES[tone];
   return (
-    <div className={cn("flex min-h-[104px] items-start gap-3 rounded-xl border p-3.5 shadow-card transition-shadow hover:shadow-float", t.card)}>
-      <div className={cn("flex size-11 shrink-0 items-center justify-center rounded-xl bg-card shadow-card", t.icon)}>
-        <Icon className="size-[22px]" />
+    <div className={cn("flex min-h-[112px] flex-col justify-between gap-2 rounded-xl border p-3.5 shadow-card transition-shadow hover:shadow-float", t.card)}>
+      <div className="flex items-center gap-2.5">
+        <div className={cn("flex size-10 shrink-0 items-center justify-center rounded-xl bg-card shadow-card", t.icon)}>
+          <Icon className="size-5" />
+        </div>
+        <p className="line-clamp-2 text-[11.5px] font-semibold leading-tight text-foreground/70">{label}</p>
       </div>
-      <div className="min-w-0 flex-1">
-        <p className="truncate text-[11.5px] font-semibold text-foreground/70">{label}</p>
-        <p className={cn("mt-0.5 truncate text-[20px] font-extrabold leading-tight tabular", valueTone === "danger" ? "text-danger" : "text-header")}>
+      <div className="min-w-0">
+        <p className={cn("truncate text-[20px] font-extrabold leading-tight tabular", valueTone === "danger" ? "text-danger" : "text-header")}>
           {value}{unit && <span className="ml-1 text-[12px] font-semibold text-foreground/60">{unit}</span>}
         </p>
-        {hint && <div className="mt-1 truncate text-[10.5px] font-medium text-foreground/60">{hint}</div>}
+        {hint && <div className="mt-0.5 truncate text-[10.5px] font-medium text-foreground/60">{hint}</div>}
       </div>
     </div>
   );

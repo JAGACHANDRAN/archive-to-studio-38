@@ -197,7 +197,7 @@ export function TnMap({
                   {small && <line x1={d.lx} y1={d.ly} x2={tx - 3 / k} y2={d.ly} className="stroke-foreground/60" strokeWidth={0.8 / k} />}
                   <text
                     x={tx}
-                    y={d.ly}
+                    y={strong && !focusSlug && !small ? d.ly + 9 / k : d.ly}
                     dy="0.35em"
                     textAnchor={small ? "start" : "middle"}
                     fontSize={fs}

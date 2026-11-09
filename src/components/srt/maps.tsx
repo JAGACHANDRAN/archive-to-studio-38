@@ -91,12 +91,20 @@ export function DistrictMap({ district, godowns, shops }: { district: District; 
       const primary = cssVar("--primary");
       const empty = cssVar("--map-empty");
       const border = cssVar("--card");
+      const isSel = (f?: GeoJSON.Feature) => String(f?.properties?.["name"] ?? "").toLowerCase() === district.name.toLowerCase();
       L.geoJSON(geo, {
         style: (f) => {
-          const sel = String(f?.properties?.name ?? "").toLowerCase() === district.name.toLowerCase();
+          const sel = isSel(f);
           return { fillColor: sel ? primary : empty, weight: sel ? 2 : 1, color: sel ? primary : border, opacity: 1, fillOpacity: sel ? 0.35 : 0.45 };
         },
       }).addTo(map);
+      const selected = L.geoJSON({ ...geo, features: geo.features.filter((f) => isSel(f)) });
+      const pins = [...godowns, ...shops].filter((x) => x.lat != null && x.lng != null).map((x) => [x.lat as number, x.lng as number] as [number, number]);
+      try {
+        const bounds = selected.getBounds();
+        for (const p of pins) bounds.extend(p);
+        if (bounds.isValid()) map.fitBounds(bounds, { padding: [30, 30], maxZoom: 12 });
+      } catch { /* keep default view */ }
       L.marker([district.lat, district.lng], {
         icon: L.divIcon({ className: "", html: `<div class="map-callout">${district.name}</div>`, iconSize: [80, 22], iconAnchor: [40, 34] }),
         interactive: false,

@@ -52,7 +52,7 @@ function StateOverview() {
         actions={<MonthSelect months={months} value={month} onChange={(m) => navigate({ search: { month: m } })} />}
       />
 
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-4 xl:grid-cols-8">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4 2xl:grid-cols-8">
         <KpiCard icon={Package} label="Total Rice Stock" value={fmtInt(s.totalStockKg)} unit="kg" hint="Godowns + shops (ledger)" />
         <KpiCard icon={Warehouse} label="Godown Stock" value={fmtInt(s.godownStockKg)} unit="kg" hint={`${s.godownsCount} godowns`} tone="info" />
         <KpiCard icon={Store} label="Shop Stock" value={fmtInt(s.shopStockKg)} unit="kg" hint={`${s.shopsCount} shops`} tone="teal" />

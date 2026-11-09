@@ -98,7 +98,7 @@ export function DistrictMap({ district, godowns, shops }: { district: District; 
           return { fillColor: sel ? primary : empty, weight: sel ? 2 : 1, color: sel ? primary : border, opacity: 1, fillOpacity: sel ? 0.35 : 0.45 };
         },
       }).addTo(map);
-      const selected = L.geoJSON({ ...geo, features: geo.features.filter((f) => isSel(f)) });
+      const selected = L.geoJSON({ ...geo, features: geo.features.filter((f: GeoJSON.Feature) => isSel(f)) });
       const pins = [...godowns, ...shops].filter((x) => x.lat != null && x.lng != null).map((x) => [x.lat as number, x.lng as number] as [number, number]);
       try {
         const bounds = selected.getBounds();

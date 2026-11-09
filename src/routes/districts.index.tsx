@@ -51,7 +51,7 @@ function DistrictsPage() {
 
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
         <Panel title="Tamil Nadu District Map" bodyClassName="flex flex-col gap-3">
-          <div className="h-[560px] rounded-lg bg-gradient-to-b from-primary-soft/60 to-card">
+          <div className="aspect-[100/115] w-full rounded-lg bg-gradient-to-b from-primary-soft/60 to-card">
             <ClientOnly fallback={<div className="h-full w-full animate-pulse rounded-lg bg-muted" />}>
               <TnMap
                 ariaLabel="Map of all Tamil Nadu districts"

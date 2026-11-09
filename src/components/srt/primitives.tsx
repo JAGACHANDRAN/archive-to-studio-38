@@ -9,7 +9,7 @@ export function Panel({ title, action, children, className, bodyClassName }: { t
     <section className={cn("rounded-xl border border-border bg-card p-4 shadow-card sm:p-5", className)}>
       {(title || action) && (
         <div className="mb-3 flex items-center justify-between gap-3">
-          {title && <h3 className="text-sm font-bold text-foreground">{title}</h3>}
+          {title && <h3 className="text-[14px] font-bold text-header">{title}</h3>}
           {action}
         </div>
       )}
@@ -19,30 +19,29 @@ export function Panel({ title, action, children, className, bodyClassName }: { t
 }
 
 const TONES = {
-  primary: "bg-primary-soft text-primary",
-  success: "bg-success-soft text-success-foreground",
-  warning: "bg-warning-soft text-warning-foreground",
-  danger: "bg-danger-soft text-danger-foreground",
-  info: "bg-info-soft text-info",
-  violet: "bg-violet-soft text-violet",
-  teal: "bg-teal-soft text-teal",
+  primary: { card: "bg-primary-soft border-primary/15", icon: "text-primary" },
+  success: { card: "bg-success-soft border-success/20", icon: "text-success" },
+  warning: { card: "bg-warning-soft border-warning/25", icon: "text-warning-foreground" },
+  danger: { card: "bg-danger-soft border-danger/20", icon: "text-danger" },
+  info: { card: "bg-info-soft border-info/20", icon: "text-info" },
+  violet: { card: "bg-violet-soft border-violet/15", icon: "text-violet" },
+  teal: { card: "bg-teal-soft border-teal/20", icon: "text-teal" },
 } as const;
 export type Tone = keyof typeof TONES;
 
 export function KpiCard({ icon: Icon, label, value, unit, hint, tone = "primary", valueTone }: { icon: ComponentType<{ className?: string }>; label: string; value: ReactNode; unit?: string | undefined; hint?: ReactNode; tone?: Tone | undefined; valueTone?: "danger" | undefined }) {
+  const t = TONES[tone];
   return (
-    <div className="flex min-h-[118px] flex-col justify-between rounded-xl border border-border bg-card p-3.5 shadow-card transition-shadow hover:shadow-float">
-      <div className="flex items-center gap-2.5">
-        <div className={cn("flex size-8 shrink-0 items-center justify-center rounded-lg", TONES[tone])}>
-          <Icon className="size-4" />
-        </div>
-        <span className="truncate text-[11px] font-semibold text-muted-foreground">{label}</span>
+    <div className={cn("flex min-h-[104px] items-start gap-3 rounded-xl border p-3.5 shadow-card transition-shadow hover:shadow-float", t.card)}>
+      <div className={cn("flex size-11 shrink-0 items-center justify-center rounded-xl bg-card shadow-card", t.icon)}>
+        <Icon className="size-[22px]" />
       </div>
-      <div>
-        <div className={cn("my-1 truncate text-[17px] font-extrabold leading-snug tabular", valueTone === "danger" ? "text-danger" : "text-foreground")}>
-          {value} {unit && <span className="text-[11px] font-normal text-muted-foreground">{unit}</span>}
-        </div>
-        {hint && <div className="truncate text-[10px] font-medium text-muted-foreground">{hint}</div>}
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-[11.5px] font-semibold text-foreground/70">{label}</p>
+        <p className={cn("mt-0.5 truncate text-[20px] font-extrabold leading-tight tabular", valueTone === "danger" ? "text-danger" : "text-header")}>
+          {value}{unit && <span className="ml-1 text-[12px] font-semibold text-foreground/60">{unit}</span>}
+        </p>
+        {hint && <div className="mt-1 truncate text-[10.5px] font-medium text-foreground/60">{hint}</div>}
       </div>
     </div>
   );
@@ -102,7 +101,7 @@ export function PageHeader({ title, subtitle, crumbs, actions }: { title: string
             ))}
           </nav>
         )}
-        <h1 className="text-[22px] font-extrabold tracking-tight text-foreground">{title}</h1>
+        <h1 className="text-[22px] font-extrabold tracking-tight text-header">{title}</h1>
         {subtitle && <p className="mt-0.5 text-xs text-muted-foreground">{subtitle}</p>}
       </div>
       {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}

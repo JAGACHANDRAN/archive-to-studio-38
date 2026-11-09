@@ -15,6 +15,7 @@ import { Route as LiveRouteImport } from './routes/live'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PredictionsRouteImport } from './routes/predictions'
 import { Route as ReportsRouteImport } from './routes/reports'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as TransactionsRouteImport } from './routes/transactions'
 import { Route as DistrictsIndexRouteImport } from './routes/districts.index'
@@ -56,6 +57,11 @@ const PredictionsRoute = PredictionsRouteImport.update({
 const ReportsRoute = ReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SettingsRoute = SettingsRouteImport.update({
@@ -128,6 +134,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/predictions': typeof PredictionsRoute
   '/reports': typeof ReportsRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
   '/transactions': typeof TransactionsRoute
   '/districts/$districtId': typeof DistrictsDistrictIdRoute
@@ -148,6 +155,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/predictions': typeof PredictionsRoute
   '/reports': typeof ReportsRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
   '/transactions': typeof TransactionsRoute
   '/districts/$districtId': typeof DistrictsDistrictIdRoute
@@ -169,6 +177,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/predictions': typeof PredictionsRoute
   '/reports': typeof ReportsRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
   '/transactions': typeof TransactionsRoute
   '/districts/$districtId': typeof DistrictsDistrictIdRoute
@@ -191,6 +200,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/predictions'
     | '/reports'
+    | '/reset-password'
     | '/settings'
     | '/transactions'
     | '/districts/$districtId'
@@ -211,6 +221,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/predictions'
     | '/reports'
+    | '/reset-password'
     | '/settings'
     | '/transactions'
     | '/districts/$districtId'
@@ -231,6 +242,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/predictions'
     | '/reports'
+    | '/reset-password'
     | '/settings'
     | '/transactions'
     | '/districts/$districtId'
@@ -252,6 +264,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   PredictionsRoute: typeof PredictionsRoute
   ReportsRoute: typeof ReportsRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   SettingsRoute: typeof SettingsRoute
   TransactionsRoute: typeof TransactionsRoute
   DistrictsDistrictIdRoute: typeof DistrictsDistrictIdRoute
@@ -308,6 +321,13 @@ declare module '@tanstack/react-router' {
       path: '/reports'
       fullPath: '/reports'
       preLoaderRoute: typeof ReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/settings': {
@@ -404,6 +424,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   PredictionsRoute: PredictionsRoute,
   ReportsRoute: ReportsRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   SettingsRoute: SettingsRoute,
   TransactionsRoute: TransactionsRoute,
   DistrictsDistrictIdRoute: DistrictsDistrictIdRoute,

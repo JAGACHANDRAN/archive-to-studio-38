@@ -5,7 +5,6 @@
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
-@import "leaflet/dist/leaflet.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -63,6 +62,12 @@
   --color-notice: var(--notice);
   --color-notice-foreground: var(--notice-foreground);
   --color-map-empty: var(--map-empty);
+  --color-map-1: var(--map-1);
+  --color-map-2: var(--map-2);
+  --color-map-3: var(--map-3);
+  --color-map-4: var(--map-4);
+  --color-header: var(--header);
+  --color-header-foreground: var(--header-foreground);
 
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
@@ -124,6 +129,14 @@
   --notice: oklch(0.962 0.059 95.617);
   --notice-foreground: oklch(0.414 0.112 45.904);
   --map-empty: oklch(0.869 0.022 252.894);
+  /* Pastel blues for districts without demo data */
+  --map-1: oklch(0.925 0.035 245);
+  --map-2: oklch(0.895 0.045 242);
+  --map-3: oklch(0.945 0.025 232);
+  --map-4: oklch(0.875 0.05 250);
+  /* Top bar */
+  --header: oklch(0.255 0.075 262);
+  --header-foreground: oklch(0.985 0.002 250);
 
   --chart-1: oklch(0.546 0.215 262.9);
   --chart-2: oklch(0.696 0.17 162.48);
@@ -181,57 +194,4 @@
 ::-webkit-scrollbar-thumb {
   background: var(--color-border);
   border-radius: 4px;
-}
-
-/* Leaflet district labels & pins */
-.leaflet-container {
-  font-family: var(--font-sans);
-  background: var(--color-muted);
-}
-.leaflet-district-label {
-  background: transparent !important;
-  border: none !important;
-}
-.leaflet-district-label span {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--color-foreground);
-  text-shadow: 0 1px 3px var(--color-card), 0 -1px 3px var(--color-card);
-  pointer-events: none;
-  white-space: nowrap;
-}
-.map-callout {
-  background: var(--color-sidebar);
-  color: var(--color-sidebar-primary-foreground);
-  font-size: 11px;
-  font-weight: 700;
-  padding: 3px 8px;
-  border-radius: 4px;
-  white-space: nowrap;
-  box-shadow: var(--shadow-float);
-}
-.map-pin {
-  width: 12px;
-  height: 12px;
-  border-radius: 9999px;
-  border: 2px solid var(--color-card);
-  box-shadow: var(--shadow-card);
-}
-.map-pin-godown {
-  background: var(--color-primary);
-  width: 16px;
-  height: 16px;
-  border-radius: 4px;
-}
-.map-pin-normal {
-  background: var(--color-success);
-}
-.map-pin-low {
-  background: var(--color-warning);
-}
-.map-pin-critical {
-  background: var(--color-danger);
-}
-.map-tooltip strong {
-  color: var(--color-foreground);
 }

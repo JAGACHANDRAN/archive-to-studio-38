@@ -1,7 +1,7 @@
 import { monthSearch } from "@/lib/search";
 import { useMemo } from "react";
 import { ClientOnly, createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
-import { Package, Warehouse, Store, HandCoins, Bell, Truck } from "lucide-react";
+import { Package, Warehouse, Store, HandCoins, Bell, Truck, MapPinned, Info } from "lucide-react";
 import { ensureCore, useCore } from "@/lib/core";
 import { districtSummaries, latestMonth, availableMonths } from "@/lib/summary";
 import { fmtInt, fmtPct, monthLabel } from "@/lib/format";
@@ -9,7 +9,8 @@ import { useAuth } from "@/hooks/use-auth";
 import { locationAccessError } from "@/lib/rbac";
 import { AccessDenied, DataTable, KpiCard, NotFoundBlock, PageHeader, PageLoading, Panel, RouteError, StatusBadge, Td, Th } from "@/components/srt/primitives";
 import { MonthSelect } from "@/components/srt/MonthSelect";
-import { DistrictMap } from "@/components/srt/maps";
+import { MapLegendDot, TnMap, type MapPin } from "@/components/srt/maps";
+import { TN_DISTRICTS, districtSlug, findTnDistrict } from "@/lib/tn-districts";
 import { StockDonut, TrendLine } from "@/components/srt/charts";
 import { DeliveriesTable, ReconciliationTable } from "@/components/srt/tables";
 import { districtsQuery } from "@/lib/data";
@@ -19,7 +20,7 @@ export const Route = createFileRoute("/districts/$districtId")({
   loader: async ({ context, params }) => {
     await ensureCore(context.queryClient);
     const districts = await context.queryClient.ensureQueryData(districtsQuery());
-    const d = districts.find((x) => String(x.id) === params.districtId);
+    const d = findTnDistrict(params.districtId, districts);
     if (!d) throw notFound();
     return { name: d.name };
   },
@@ -47,11 +48,21 @@ function DistrictPage() {
   const { actor } = useAuth();
   const months = availableMonths(core.monthly);
   const month = search.month && months.includes(search.month) ? search.month : latestMonth(core.monthly);
-  const id = Number(districtId);
+  const tn = findTnDistrict(districtId, core.districts);
+  const db = tn ? core.districts.find((d) => districtSlug(d.name) === tn.slug) : undefined;
+  const id = db?.id ?? -1;
   const summary = useMemo(() => districtSummaries(core, month).find((d) => d.district.id === id), [core, month, id]);
   const godowns = useMemo(() => core.godowns.filter((g) => g.district_id === id), [core.godowns, id]);
   const shops = useMemo(() => core.shops.filter((s) => s.district_id === id), [core.shops, id]);
-  if (!summary) return <NotFoundBlock what="District" />;
+  const pins = useMemo<MapPin[]>(
+    () => [
+      ...godowns.filter((g) => g.lat != null && g.lng != null).map((g) => ({ id: g.id, lng: g.lng as number, lat: g.lat as number, kind: "godown" as const, label: g.name })),
+      ...shops.filter((x) => x.lat != null && x.lng != null).map((x) => ({ id: x.id, lng: x.lng as number, lat: x.lat as number, kind: "shop" as const, status: x.status, label: x.name })),
+    ],
+    [godowns, shops],
+  );
+  if (!tn) return <NotFoundBlock what="District" />;
+  if (!summary) return <MapOnlyDistrict name={tn.name} slug={tn.slug} withData={core.districts.map((d) => d.name)} />;
   const denied = locationAccessError(actor, "district", id, core, "view");
   if (denied) return <AccessDenied message={denied} />;
 
@@ -80,10 +91,42 @@ function DistrictPage() {
       </div>
 
       <div className="mt-4 grid gap-4 xl:grid-cols-[1.3fr_1fr]">
-        <Panel title="Godowns & Shops Map" bodyClassName="h-[420px] overflow-hidden rounded-lg border border-border">
+        <Panel
+          title={`${summary.district.name} District Map`}
+          action={<span className="text-[11px] text-muted-foreground">{godowns.length} godowns · {shops.length} shops</span>}
+          bodyClassName="relative h-[480px] overflow-hidden rounded-lg border border-border bg-gradient-to-b from-primary-soft/60 to-card"
+        >
           <ClientOnly fallback={<div className="h-full w-full animate-pulse bg-muted" />}>
-            <DistrictMap district={summary.district} godowns={godowns} shops={shops} />
+            <TnMap
+              ariaLabel={`Map of ${summary.district.name} district with godowns and fair price shops`}
+              focusSlug={tn.slug}
+              toneFor={(slug) => (slug === tn.slug ? "focus" : "dim")}
+              pins={pins}
+              aspect={0.85}
+              onSelect={(slug) => slug !== tn.slug && navigate({ to: "/districts/$districtId", params: { districtId: slug } })}
+              onPinSelect={(p) => (p.kind === "godown" ? navigate({ to: "/godowns/$godownId", params: { godownId: p.id } }) : navigate({ to: "/shops/$shopId", params: { shopId: p.id } }))}
+              tooltipFor={(slug, name) => (slug === tn.slug ? <strong>{name}</strong> : <span><strong>{name}</strong><span className="block text-[10px] text-primary">Click to open →</span></span>)}
+              pinTooltip={(p) => {
+                const g = p.kind === "godown" ? godowns.find((x) => x.id === p.id) : undefined;
+                const sh = p.kind === "shop" ? shops.find((x) => x.id === p.id) : undefined;
+                return (
+                  <div>
+                    <strong className="text-[12.5px]">{p.label}</strong>
+                    <p className="font-mono text-[10px] text-muted-foreground">{p.id}</p>
+                    <p className="mt-1 text-[11px]">{fmtInt(g?.expected_stock_kg ?? sh?.expected_stock_kg ?? 0)} kg in stock</p>
+                    {sh && <div className="mt-1"><StatusBadge status={sh.status} /></div>}
+                    <p className="mt-1 text-[10px] font-semibold text-primary">Click to open →</p>
+                  </div>
+                );
+              }}
+            />
           </ClientOnly>
+          <ul className="pointer-events-none absolute left-3 top-3 space-y-1.5 rounded-lg border border-border bg-card/95 p-2.5 shadow-card">
+            <li className="flex items-center gap-2 text-[11px] font-semibold"><span className="size-3 rounded-[3px] bg-primary" /> Godown</li>
+            <li className="flex items-center gap-2 text-[11px] font-semibold"><span className="size-3 rounded-full bg-success" /> Shop · Normal</li>
+            <li className="flex items-center gap-2 text-[11px] font-semibold"><span className="size-3 rounded-full bg-warning" /> Shop · Low</li>
+            <li className="flex items-center gap-2 text-[11px] font-semibold"><span className="size-3 rounded-full bg-danger" /> Shop · Critical</li>
+          </ul>
         </Panel>
         <div className="grid gap-4">
           <Panel title="Shop Stock Health">
@@ -133,6 +176,57 @@ function DistrictPage() {
       <div className="mt-4 grid gap-4 xl:grid-cols-2">
         <Panel title="Recent Deliveries"><DeliveriesTable deliveries={deliveries} /></Panel>
         <Panel title="Physical Inspections"><ReconciliationTable rows={recon} /></Panel>
+      </div>
+    </div>
+  );
+}
+
+function MapOnlyDistrict({ name, slug, withData }: { name: string; slug: string; withData: string[] }) {
+  const navigate = useNavigate();
+  const others = TN_DISTRICTS.filter((d) => withData.some((n) => districtSlug(n) === d.slug));
+  return (
+    <div className="mx-auto max-w-[1440px]">
+      <PageHeader
+        title={`${name} District`}
+        subtitle="District boundary · no godowns or fair price shops in the demo dataset yet"
+        crumbs={[{ label: "Dashboard", to: "/" }, { label: "Districts", to: "/districts" }, { label: name }]}
+      />
+      <div className="grid gap-4 xl:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
+        <Panel title={`${name} District Map`} bodyClassName="h-[520px] overflow-hidden rounded-lg border border-border bg-gradient-to-b from-primary-soft/60 to-card">
+          <ClientOnly fallback={<div className="h-full w-full animate-pulse bg-muted" />}>
+            <TnMap
+              ariaLabel={`Map of ${name} district`}
+              focusSlug={slug}
+              toneFor={(s) => (s === slug ? "focus" : "dim")}
+              aspect={0.85}
+              onSelect={(s) => s !== slug && navigate({ to: "/districts/$districtId", params: { districtId: s } })}
+              tooltipFor={(s, n) => (s === slug ? <strong>{n}</strong> : <span><strong>{n}</strong><span className="block text-[10px] text-primary">Click to open →</span></span>)}
+            />
+          </ClientOnly>
+        </Panel>
+        <div className="grid content-start gap-4">
+          <Panel>
+            <div className="flex items-start gap-3">
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary-soft text-primary"><MapPinned className="size-5" /></span>
+              <div>
+                <h2 className="text-base font-bold text-header">No stock records for {name} yet</h2>
+                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                  The demo dataset covers {others.length} districts. Once godowns and fair price shops in {name} are added, their stock, deliveries and alerts will appear here on this map.
+                </p>
+              </div>
+            </div>
+          </Panel>
+          <Panel title="Districts with live stock data">
+            <ul className="grid grid-cols-2 gap-2">
+              {others.map((d) => (
+                <li key={d.slug}>
+                  <Link to="/districts/$districtId" params={{ districtId: d.slug }} className="block rounded-lg border border-border px-3 py-2 text-xs font-semibold text-foreground hover:border-primary hover:bg-primary-soft hover:text-primary">{d.name}</Link>
+                </li>
+              ))}
+            </ul>
+          </Panel>
+          <p className="flex items-center gap-1.5 text-[11px] text-muted-foreground"><Info className="size-3.5 text-primary" /> Click a neighbouring district on the map to open it.</p>
+        </div>
       </div>
     </div>
   );

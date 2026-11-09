@@ -1,3 +1,4 @@
+import { districtSlug } from "@/lib/tn-districts";
 import { useMemo } from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Warehouse, Truck, ArrowUpRight, Gauge, Store } from "lucide-react";
@@ -53,7 +54,7 @@ function GodownPage() {
       <PageHeader
         title={g.name}
         subtitle={`${g.id} · ${district?.name ?? ""} district`}
-        crumbs={[{ label: "Dashboard", to: "/" }, ...(district ? [{ label: district.name, to: "/districts/$districtId", params: { districtId: String(district.id) } }] : []), { label: g.id }]}
+        crumbs={[{ label: "Dashboard", to: "/" }, ...(district ? [{ label: district.name, to: "/districts/$districtId", params: { districtId: districtSlug(district.name) } }] : []), { label: g.id }]}
       />
       <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
         <KpiCard icon={Warehouse} label="Expected Stock" value={fmtInt(g.expected_stock_kg)} unit="kg" hint={`Opening ${fmtInt(g.opening_stock_kg)} kg`} />

@@ -9,7 +9,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { locationAccessError } from "@/lib/rbac";
 import { AccessDenied, DataTable, KpiCard, NotFoundBlock, PageHeader, PageLoading, Panel, RouteError, StatusBadge, Td, Th } from "@/components/srt/primitives";
 import { MonthSelect } from "@/components/srt/MonthSelect";
-import { MapLegendDot, TnMap, type MapPin } from "@/components/srt/maps";
+import { TnMap, type MapPin } from "@/components/srt/maps";
 import { TN_DISTRICTS, districtSlug, findTnDistrict } from "@/lib/tn-districts";
 import { StockDonut, TrendLine } from "@/components/srt/charts";
 import { DeliveriesTable, ReconciliationTable } from "@/components/srt/tables";
